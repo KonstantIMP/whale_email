@@ -15,3 +15,14 @@ void print_hello(std::ostream & os) {
     os << "  \t\t\t\t\t         |  O        \\___/  |\n";
     os << "  Use 'whale -h' to see help\t\t       ~^~^~^~^~^~^~^~^~^~^~^~^~\n\n";
 }
+
+void print_help(std::ostream & os) {
+    os << "  WHALE : version " << str_version << "\n\n";
+
+    os << "  whale is an application to invisible email sending\n\n";
+
+    os << "  HELP MANUAL :\n\n";
+    os << "  [USAGE]\n  \twhale [\'-h\' if you want to see this message]\n\n";
+
+    os << "  \twhale uses stdin to get all usefull info for work\n\n";
+}
