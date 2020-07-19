@@ -32,20 +32,7 @@ int main(int argc, char * argv[]) {
         return 140;
     }
 
-    std::cout << "  \tHow do you want to introduce yourself : ";
-    std::getline(std::cin, tmp_data);
-
-    if(tmp_data != "") {
-        try {
-            email.set_sender_email(email.get_sender_email() + " " + tmp_data);
-        }  catch (smtp_err & e) {
-            std::cout << "  \t[ERROR #141] Incorrect input or runtime error\n  \t\twhat () : " << e.what() << '\n';
-            return 141;
-        }
-    }
-    else std::cout << "\n  \tOK. It was, is and will be a secret\n\n";
-
-    std::cout << "  \tEnter your\'s email password : ";
+    std::cout << "  \tEnter your email password : ";
     std::getline(std::cin, tmp_data);
 
     try {
@@ -54,6 +41,42 @@ int main(int argc, char * argv[]) {
         std::cout << "  \t[ERROR #142] Incorrect input or runtime error\n  \t\twhat () : " << e.what() << '\n';
         return 142;
     }
+
+    std::cout << "\n  \tWhick email do you want to use to introduce yourself : ";
+    std::getline(std::cin, tmp_data);
+
+    if(tmp_data != "") {
+        try {
+            email.set_fake_sender(tmp_data);
+        }  catch (smtp_err & e) {
+            std::cout << "  \t[ERROR #148] Incorrect input or runtime error\n  \t\twhat () : " << e.what() << '\n';
+            return 148;
+        }
+    }
+    else std::cout << "\n  \tOK. It will be " + email.get_sender_email() << "\n\n";
+
+    std::cout << "  \tHow do you want to introduce yourself : ";
+    std::getline(std::cin, tmp_data);
+
+    if(tmp_data != "") {
+        if(email.get_fake_sender() != "") {
+            try {
+                email.set_fake_sender(email.get_fake_sender() + " " + tmp_data);
+            }  catch (smtp_err & e) {
+                std::cout << "  \t[ERROR #149] Incorrect input or runtime error\n  \t\twhat () : " << e.what() << '\n';
+                return 149;
+            }
+        }
+        else {
+            try {
+                email.set_sender_email(email.get_sender_email() + " " + tmp_data);
+            }  catch (smtp_err & e) {
+                std::cout << "  \t[ERROR #1410] Incorrect input or runtime error\n  \t\twhat () : " << e.what() << '\n';
+                return 1410;
+            }
+        }
+    }
+    else std::cout << "\n  \tOK. It was, is and will be a secret\n\n";
 
     std::cout << "\n  \tEnter message\'s subject : ";
     std::getline(std::cin, tmp_data);
