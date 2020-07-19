@@ -135,5 +135,60 @@ int main(int argc, char * argv[]) {
         else break;
     }
 
+    std::cout << "\n  \tWrite email message (To stop entering tap ENTR twice) : \n";
+
+    std::string msg = "";
+
+    while (1) {
+        std::cout << "\t\t";
+        std::getline(std::cin, tmp_data);
+
+        if(tmp_data == "") {
+            std::cout << "\t\t";
+            std::getline(std::cin, tmp_data);
+            if(tmp_data == "") break;
+            else msg += '\n' + tmp_data;
+        }
+        else msg += tmp_data + '\n';
+    }
+
+    std::cout << "\n  \tEnd message writing\n\n";
+
+    std::list<std::string> attachment_list;
+
+    while (1) {
+        std::cout << "  \tAdd attachment : ";
+        std::getline(std::cin, tmp_data);
+        if(tmp_data != "") {
+            try {
+                attachment_list.push_back(tmp_data);
+            }  catch (std::bad_alloc & e) {
+                std::cout << "  \t[ERROR #40] Runtime error\n  \t\twhat () : " << e.what() << '\n';
+                return 40;
+            } catch (std::runtime_error & e) {
+                std::cout << "  \t[ERROR #41] Runtime error\n  \t\twhat () : " << e.what() << '\n';
+                return 41;
+            }
+        }
+        else break;
+    }
+
+    bool debug;
+
+    std::cout << "\n  \tDou you want see debug output [y/n] : ";
+    std::getline(std::cin, tmp_data);
+
+    if(tmp_data == "" || tmp_data == "y" || tmp_data == "Y") debug = true;
+    else debug = false;
+
+    std::cout << "\n  OK. Let\'s send this message\n\n";
+
+    try {
+        email.sent_email(msg, attachment_list, debug);
+    }  catch (smtp_err & e) {
+        std::cout << "  \t[ERROR #42] Runtime error\n  \t\twhat () : " << e.what() << '\n';
+        return 42;
+    }
+
     return 0;
 }
