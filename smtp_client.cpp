@@ -23,9 +23,9 @@ smtp_client::smtp_client(const smtp_client & copy) {
 smtp_client::smtp_client(const std::string & sender, const std::string & password, const std::string & smtp) :
                                     smtp_server(""), sender_email(""), sender_password(""), reply_to_email(""), recipient_email(""),
                                     message_subject(""), cc_recipient(), bcc_recipient(), fake_recipient() {
-    if(!smtp_email_validate(sender)) throw smtp_err("[ERROR] Can't validate senders email adress");
+    if(!smtp_email_validate(sender)) throw smtp_err("Can't validate senders email adress");
     if(smtp != "") {
-        if(!smtp_email_validate(smtp)) throw smtp_err("[ERROR] Can't validate senders SMTP server(Don't write IP or MAC adress, use domain name)");
+        if(!smtp_email_validate(smtp)) throw smtp_err("Can't validate senders SMTP server(Don't write IP or MAC adress, use domain name)");
         smtp_server = smtp;
     }
     else smtp_server = smtp_get_smtp(sender);
@@ -76,7 +76,7 @@ void smtp_client::clear_additional() {
 }
 
 void smtp_client::set_smtp_server(const std::string & smtp) {
-    if(!smtp_email_validate(smtp)) throw smtp_err("[ERROR] Can't validate senders SMTP server(Don't write IP or MAC adress, use domain name)");
+    if(!smtp_email_validate(smtp)) throw smtp_err("Can't validate senders SMTP server(Don't write IP or MAC adress, use domain name)");
     smtp_server = smtp;
 }
 
@@ -85,7 +85,7 @@ std::string smtp_client::get_smtp_server() const {
 }
 
 void smtp_client::set_sender_email(const std::string & sender) {
-    if(!smtp_email_validate(sender)) throw smtp_err("[ERROR] Can't validate senders email adress");
+    if(!smtp_email_validate(sender)) throw smtp_err("Can't validate senders email adress");
     sender_email = sender;
 }
 
@@ -94,6 +94,7 @@ std::string smtp_client::get_sender_email() const {
 }
 
 void smtp_client::set_sender_password(const std::string & password) {
+    if(password == "") throw smtp_err("Password can\'t be empty");
     sender_password = password;
 }
 
@@ -110,7 +111,7 @@ std::string smtp_client::get_email_to_reply() const {
 }
 
 void smtp_client::set_recipient_email(const std::string & recipient) {
-    if(!smtp_email_validate(recipient)) throw smtp_err("[ERROR] Can't validate recipients email adress");
+    if(!smtp_email_validate(recipient)) throw smtp_err("Can't validate recipients email adress");
     recipient_email = recipient;
 }
 
@@ -132,19 +133,19 @@ std::size_t smtp_client::get_cc_recipient_num() const {
 }
 
 void smtp_client::add_cc_recipient(const std::string & cc) {
-    if(!smtp_email_validate(cc)) throw smtp_err("[ERROR] Can't validate " + cc);
+    if(!smtp_email_validate(cc)) throw smtp_err("Can't validate " + cc);
     cc_recipient.push_back(cc);
 }
 
 std::string smtp_client::get_cc_recipient(const std::size_t & num) const {
-    if(num >= cc_recipient.size()) throw smtp_err("[ERROR] CC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= cc_recipient.size()) throw smtp_err("CC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = cc_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     return * iter;
 }
 
 void smtp_client::remove_cc_recipient(const std::size_t & num) {
-    if(num >= cc_recipient.size()) throw smtp_err("[ERROR] CC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= cc_recipient.size()) throw smtp_err("CC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = cc_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     cc_recipient.erase(iter);
@@ -159,7 +160,7 @@ void smtp_client::remove_cc_recipient(const std::string & cc) {
         }
         iter++;
     }
-    throw smtp_err("[ERROR] CC_RECIPIENTS list doesnt conatin \'" + cc + '\'');
+    throw smtp_err("CC_RECIPIENTS list doesnt conatin \'" + cc + '\'');
 }
 
 std::list<std::string> & smtp_client::get_cc_recipient_list() const {
@@ -172,19 +173,19 @@ std::size_t smtp_client::get_bcc_recipient_num() const {
 }
 
 void smtp_client::add_bcc_recipient(const std::string & bcc) {
-    if(!smtp_email_validate(bcc)) throw smtp_err("[ERROR] Can't validate " + bcc);
+    if(!smtp_email_validate(bcc)) throw smtp_err("Can't validate " + bcc);
     bcc_recipient.push_back(bcc);
 }
 
 std::string smtp_client::get_bcc_recipient(const std::size_t & num) const {
-    if(num >= bcc_recipient.size()) throw smtp_err("[ERROR] BCC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= bcc_recipient.size()) throw smtp_err("BCC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = bcc_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     return * iter;
 }
 
 void smtp_client::remove_bcc_recipient(const std::size_t & num) {
-    if(num >= bcc_recipient.size()) throw smtp_err("[ERROR] BCC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= bcc_recipient.size()) throw smtp_err("BCC_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = bcc_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     bcc_recipient.erase(iter);
@@ -199,7 +200,7 @@ void smtp_client::remove_bcc_recipient(const std::string & bcc) {
         }
         iter++;
     }
-    throw smtp_err("[ERROR] BCC_RECIPIENTS list doesnt conatin \'" + bcc + '\'');
+    throw smtp_err("BCC_RECIPIENTS list doesnt conatin \'" + bcc + '\'');
 }
 
 std::list<std::string> & smtp_client::get_bcc_recipient_list() const {
@@ -216,14 +217,14 @@ void smtp_client::add_fake_recipient(const std::string & fake) {
 }
 
 std::string smtp_client::get_fake_recipient(const std::size_t & num) const {
-    if(num >= fake_recipient.size()) throw smtp_err("[ERROR] FAKE_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= fake_recipient.size()) throw smtp_err("FAKE_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = fake_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     return * iter;
 }
 
 void smtp_client::remove_fake_recipient(const std::size_t & num) {
-    if(num >= fake_recipient.size()) throw smtp_err("[ERROR] FAKE_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
+    if(num >= fake_recipient.size()) throw smtp_err("FAKE_RECIPIENTS list doesn't contain element with " + std::to_string(num) + " index");
     auto iter = fake_recipient.begin();
     for(std::size_t i{0}; i < num; i++) iter++;
     fake_recipient.erase(iter);
@@ -238,7 +239,7 @@ void smtp_client::remove_fake_recipient(const std::string & fake) {
         }
         iter++;
     }
-    throw smtp_err("[ERROR] FAKE_RECIPIENTS list doesnt conatin \'" + fake + '\'');
+    throw smtp_err("FAKE_RECIPIENTS list doesnt conatin \'" + fake + '\'');
 }
 
 std::list<std::string> & smtp_client::get_fake_recipient_list() const {
@@ -253,14 +254,14 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
     if(debug) std::clog << "\tSender's : ";
     if(sender_email == "") {
         if(debug) std::clog << "UNDEFINED\n";
-        throw smtp_err("[ERROR] You need enter senders email adress");
+        throw smtp_err("You need enter senders email adress");
     }
     if(debug) std::clog << sender_email << '\n';
 
     if(debug) std::clog << "\tSender's password : ";
     if(sender_password == "") {
         if(debug) std::clog << "UNDEFINED\n";
-        throw smtp_err("[ERROR] You need enter your email's passowrd");
+        throw smtp_err("You need enter your email's passowrd");
     }
     if(debug) std::clog << sender_password << '\n';
 
@@ -326,7 +327,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
             }
             else {
                 if(debug) std::clog << " doesn't exist\n";
-                throw smtp_err("[ERROR] \'" + *iter + "\' attachment doesn't exist");
+                throw smtp_err("\'" + *iter + "\' attachment doesn't exist");
             }
 
             fin.close();
@@ -505,7 +506,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
 
         if(err != CURLE_OK) {
             if(debug) std::clog << "[DEBUG] CURL error : " << err << "\n\n";
-            throw smtp_err("[ERROR] CURL sending error : " + std::string(curl_easy_strerror(err)));
+            throw smtp_err("CURL sending error : " + std::string(curl_easy_strerror(err)));
         }
 
         if(debug) std::clog << "[DEBUG] Memory free\n";
@@ -519,7 +520,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
     }
     else {
         if(debug) std::clog << "ERROR\n\n";
-        throw smtp_err("[ERROR] Can't init CURL. Check your internet connection");
+        throw smtp_err("Can't init CURL. Check your internet connection");
     }
 
     return true;
@@ -560,7 +561,7 @@ std::string smtp_client::smtp_get_smtp(const std::string & adress) const {
         else break;
     }
 
-    if(!smtp_email_validate(tmp)) throw smtp_err("[ERROR] Can't validate senders SMTP server. You need enter email adress before name!");
+    if(!smtp_email_validate(tmp)) throw smtp_err("Can't validate senders SMTP server. You need enter email adress before name!");
 
     if(tmp.find("@yandex.ru") != std::string::npos) return "smtps://smtp.yandex.ru";
     if(tmp.find("@gmail.ru") != std::string::npos) return "smtps://smtp.gmail.com";
@@ -569,7 +570,7 @@ std::string smtp_client::smtp_get_smtp(const std::string & adress) const {
     if(tmp.find("@mail.ru") != std::string::npos) return "smtps://smtp.mail.ru";
     if(tmp.find("@outlook.com") != std::string::npos) return "smtps://smtp-mail.outlook.com";
 
-    throw smtp_err("[ERROR] Can't find suitable SMTP server in the base");
+    throw smtp_err("Can't find suitable SMTP server in the base");
 }
 
 std::string smtp_client::smtp_get_login(const std::string & adress) const {
@@ -579,7 +580,7 @@ std::string smtp_client::smtp_get_login(const std::string & adress) const {
         else break;
     }
 
-    if(!smtp_email_validate(tmp)) throw smtp_err("[ERROR] Can't validate senders email adress");
+    if(!smtp_email_validate(tmp)) throw smtp_err("Can't validate senders email adress");
 
     if(tmp.substr(tmp.length() - 10) == "@yandex.ru") return tmp.substr(0, tmp.length() - 10);
 
