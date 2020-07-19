@@ -35,4 +35,4 @@ find_package(CURL)
 link_directories(${CURL_INCLUDE_DIRS})
 link_libraries(${CURL_LIBRARIES})
 
-add_executable(whale_email main.cpp smtp_client.hpp smtp_client.cpp whale_email.hpp whale_email.cpp defines.hpp)
+add_executable(whale_email src/main.cpp include/smtp_client.hpp src/smtp_client.cpp include/whale_email.hpp src/whale_email.cpp include/defines.hpp)

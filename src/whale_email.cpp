@@ -1,5 +1,5 @@
-#include "whale_email.hpp"
-#include "defines.hpp"
+#include "../include/whale_email.hpp"
+#include "../include/defines.hpp"
 
 void print_hello(std::ostream & os) {
     os << "                                                                        \n";

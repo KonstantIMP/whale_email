@@ -1,5 +1,5 @@
-#include "whale_email.hpp"
-#include "smtp_client.hpp"
+#include "../include/whale_email.hpp"
+#include "../include/smtp_client.hpp"
 
 int main(int argc, char * argv[]) {
     print_hello(std::cout);

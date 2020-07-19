@@ -1,4 +1,4 @@
-#include "smtp_client.hpp"
+#include "../include/smtp_client.hpp"
 
 smtp_client::smtp_client() : smtp_server(""), sender_email(""), sender_password(""), reply_to_email(""),
     recipient_email(""), message_subject(""), cc_recipient(), bcc_recipient(), fake_recipient() {}
