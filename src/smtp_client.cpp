@@ -1,6 +1,6 @@
 #include "../include/smtp_client.hpp"
 
-smtp_client::smtp_client() : smtp_server(""), sender_email(""), sender_password(""), fake_sender(""), reply_to_email(""),
+smtp_client::smtp_client() : smtp_server(""), sender_email(""), sender_password(""), reply_to_email(""),
     recipient_email(""), message_subject(""), cc_recipient(), bcc_recipient(), fake_recipient() {}
 
 smtp_client::smtp_client(const smtp_client & copy) {
@@ -100,15 +100,6 @@ void smtp_client::set_sender_password(const std::string & password) {
 
 std::string smtp_client::get_sender_password() const {
     return sender_password;
-}
-
-void smtp_client::set_fake_sender(const std::string & fake_s) {
-    if(!smtp_email_validate(fake_s)) throw smtp_err("Can\'t validate fake senders email adress");
-    fake_sender = fake_s;
-}
-
-std::string smtp_client::get_fake_sender() const {
-    return fake_sender;
 }
 
 void smtp_client::set_email_to_reply(const std::string & reply) {
@@ -275,8 +266,6 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
     }
     if(debug) std::clog << sender_password << '\n';
 
-    if(debug) std::clog << "[DEBUG] Fake sender is : " << (fake_sender == "" ? "UNDEFINED" : fake_sender) << "\n\n";
-
     if(debug) {
         std::clog << "\tEmail to reply : ";
         if(reply_to_email == "") std::clog << "UNDEFINED\n";
@@ -361,22 +350,13 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
 
     tmp = "";
 
-    if(fake_sender == "") {
+    if(sender_email.find(" it_is_a_text_to_say_to_anonim_send") == std::string::npos) {
         for(std::size_t i{0}; i < sender_email.length(); i++) {
             if(sender_email.at(i) == ' ') break;
             tmp += sender_email.at(i);
         }
 
         tmp = "From: <" + tmp + '>' + sender_email.substr(tmp.length()) + "\r\n"; smtp_header += tmp;
-        if(debug) std::clog << '\t' << tmp;
-    }
-    else {
-        for(std::size_t i{0}; i < fake_sender.length(); i++) {
-            if(fake_sender.at(i) == ' ') break;
-            tmp += fake_sender.at(i);
-        }
-
-        tmp = "From: <" + tmp + '>' + fake_sender.substr(tmp.length()) + "\r\n"; smtp_header += tmp;
         if(debug) std::clog << '\t' << tmp;
     }
 
@@ -587,8 +567,8 @@ std::string smtp_client::smtp_get_smtp(const std::string & adress) const {
     if(!smtp_email_validate(tmp)) throw smtp_err("Can't validate senders SMTP server. You need enter email adress before name!");
 
     if(tmp.find("@yandex.ru") != std::string::npos) return "smtps://smtp.yandex.ru";
-    if(tmp.find("@gmail.ru") != std::string::npos) return "smtps://smtp.gmail.com";
-    if(tmp.find("@google.ru") != std::string::npos) return "smtps://smtp.gmail.com";
+    if(tmp.find("@gmail.com") != std::string::npos) return "smtps://smtp.gmail.com";
+    if(tmp.find("@google.com") != std::string::npos) return "smtps://smtp.gmail.com";
     if(tmp.find("@rambler.ru") != std::string::npos) return "smtps://smtp.rambler.ru";
     if(tmp.find("@mail.ru") != std::string::npos) return "smtps://smtp.mail.ru";
     if(tmp.find("@outlook.com") != std::string::npos) return "smtps://smtp-mail.outlook.com";

@@ -55,9 +55,6 @@ public:
     void set_sender_password(const std::string &);
     std::string get_sender_password() const;
 
-    void set_fake_sender(const std::string &);
-    std::string get_fake_sender() const;
-
     void set_email_to_reply(const std::string &);
     std::string get_email_to_reply() const;
 
@@ -119,8 +116,6 @@ private:
 
     std::string sender_email;
     std::string sender_password;
-
-    std::string fake_sender;
 
     std::string reply_to_email;
 
