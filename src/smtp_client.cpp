@@ -564,8 +564,8 @@ std::string smtp_client::smtp_get_smtp(const std::string & adress) const {
     if(!smtp_email_validate(tmp)) throw smtp_err("Can't validate senders SMTP server. You need enter email adress before name!");
 
     if(tmp.find("@yandex.ru") != std::string::npos) return "smtps://smtp.yandex.ru";
-    if(tmp.find("@gmail.ru") != std::string::npos) return "smtps://smtp.gmail.com";
-    if(tmp.find("@google.ru") != std::string::npos) return "smtps://smtp.gmail.com";
+    if(tmp.find("@gmail.com") != std::string::npos) return "smtps://smtp.gmail.com";
+    if(tmp.find("@google.com") != std::string::npos) return "smtps://smtp.gmail.com";
     if(tmp.find("@rambler.ru") != std::string::npos) return "smtps://smtp.rambler.ru";
     if(tmp.find("@mail.ru") != std::string::npos) return "smtps://smtp.mail.ru";
     if(tmp.find("@outlook.com") != std::string::npos) return "smtps://smtp-mail.outlook.com";
