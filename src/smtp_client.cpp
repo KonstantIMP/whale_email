@@ -515,8 +515,6 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
         curl_slist_free_all(header);
 
         curl_easy_cleanup(email_msg);
-
-        if(attachment.size() != 0) curl_mime_free(mime);
     }
     else {
         if(debug) std::clog << "ERROR\n\n";

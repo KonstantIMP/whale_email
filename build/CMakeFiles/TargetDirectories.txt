@@ -1,0 +1,3 @@
+/home/konstantimp/Projects/whale_email/build/CMakeFiles/rebuild_cache.dir
+/home/konstantimp/Projects/whale_email/build/CMakeFiles/edit_cache.dir
+/home/konstantimp/Projects/whale_email/build/CMakeFiles/whale_email.dir
