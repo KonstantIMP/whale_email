@@ -474,9 +474,10 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
 
         part = curl_mime_addpart(mime);
         curl_mime_subparts(part, alt);
+        //curl_mime_encoder(part, "base64");
         curl_mime_type(part, "multipart/alternative");
 
-        slist = curl_slist_append(nullptr, "Content-Disposition: inline");
+        slist = curl_slist_append(slist, "Content-Disposition: inline");
         curl_mime_headers(part, header, 1);
 
         if(attachment.size() != 0) {
@@ -484,6 +485,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
 
             for(std::size_t i{0}; i < attachment.size(); i++) {
                 part = curl_mime_addpart(mime);
+                curl_mime_encoder(part, "base64");
                 curl_mime_filedata(part, (*a_iter).c_str());
 
                 curl_easy_setopt(email_msg, CURLOPT_MIMEPOST, mime);
@@ -505,7 +507,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
         if(debug) std::clog << "\n[DEBUG] CURL_DEBUG ____________________\n\n";
 
         if(err != CURLE_OK) {
-            if(debug) std::clog << "[DEBUG] CURL error : " << err << "\n\n";
+            if(debug) std::clog << "[DEBUG] CURL error : " << static_cast<int>(err) << "\n\n";
             throw smtp_err("CURL sending error : " + std::string(curl_easy_strerror(err)));
         }
 
