@@ -355,6 +355,7 @@ bool smtp_client::sent_email(const std::string & msg, const std::list<std::strin
     }
 
     tmp = "From: <" + tmp + '>' + sender_email.substr(tmp.length()) + "\r\n"; smtp_header += tmp;
+    //tmp = "From:" + sender_email.substr(tmp.length()) + "\r\n"; smtp_header += tmp;
     if(debug) std::clog << '\t' << tmp;
 
     auto iter = cc_recipient.begin();
@@ -549,7 +550,14 @@ std::string smtp_client::smtp_gen_msg_id() const {
 
     msg_id += "ht80ew"; srand(static_cast<unsigned int>(time(nullptr)));
 
-    for(std::size_t i{0}; i < 10; i++) std::random_shuffle(msg_id.begin(), msg_id.end());
+    for(std::size_t i{0}; i < 10; i++) {
+        //std::random_shuffle(msg_id.begin(), msg_id.end());
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        std::shuffle(msg_id.begin(), msg_id.end(), g);
+    }
 
     return msg_id + static_cast<char>((rand() % 24) + 66) + "@zosima.com";
 }
